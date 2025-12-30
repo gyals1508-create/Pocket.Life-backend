@@ -25,6 +25,18 @@ public class MealController {
         return mealRepository.save(meal);
     }
 
+    @PutMapping("/{id}")
+    public Meal update(@PathVariable Long id, @RequestBody Meal mealDetails) {
+        Meal meal = mealRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 기록을 찾을 수 없습니다."));
+
+        meal.setText(mealDetails.getText()); // 새로운 내용으로 교체
+        // 만약 식단 타입(아침/점심 등)도 수정 가능하게 하려면 아래 줄 추가
+        // meal.setMealType(mealDetails.getMealType());
+
+        return mealRepository.save(meal); // DB에 반영
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         mealRepository.deleteById(id);
