@@ -15,13 +15,14 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 길이를 30으로 제한하고 필수값 설정 반영
     @Column(name = "menu_name", length = 30, nullable = false)
     private String text;
 
     @Column(name = "meal_type", length = 20)
     private String mealType;
 
-    // ★ 칼로리 필드 추가
+    // 칼로리 필드 유지
     @Column(name = "calories")
     private Integer calories;
 

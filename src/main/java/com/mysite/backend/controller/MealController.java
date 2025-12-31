@@ -15,6 +15,7 @@ public class MealController {
     private final MealRepository mealRepository;
 
     @GetMapping
+    // 리액트에서 보낸 날짜 파라미터로 조회
     public List<Meal> getList(@RequestParam LocalDate date) {
         return mealRepository.findAllByMealDate(date);
     }
@@ -30,7 +31,7 @@ public class MealController {
                 .orElseThrow(() -> new RuntimeException("해당 기록을 찾을 수 없습니다."));
 
         meal.setText(mealDetails.getText());
-        meal.setCalories(mealDetails.getCalories()); // 칼로리 수정 반영
+        meal.setCalories(mealDetails.getCalories()); // 칼로리 수정 반영 유지
         return mealRepository.save(meal);
     }
 
