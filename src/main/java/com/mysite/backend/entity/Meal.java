@@ -15,12 +15,16 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 팀원 의견 반영: 길이를 30으로 제한하고 필수값(NOT NULL) 설정
+    // 길이를 30으로 제한하고 필수값 설정 반영
     @Column(name = "menu_name", length = 30, nullable = false)
     private String text;
 
     @Column(name = "meal_type", length = 20)
     private String mealType;
+
+    // 칼로리 필드 유지
+    @Column(name = "calories")
+    private Integer calories;
 
     @Column(name = "meal_date")
     private LocalDate mealDate;
@@ -31,5 +35,9 @@ public class Meal {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+        // 칼로리 값이 없으면 0으로 기본 세팅
+        if (this.calories == null) {
+            this.calories = 0;
+        }
     }
 }

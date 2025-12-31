@@ -9,14 +9,15 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/shopping") // 리액트 경로는 그대로 유지
+@RequestMapping("/api/shopping")
 @CrossOrigin(origins = "*")
 public class CartController {
-    private final CartRepository repository; // ★ 주입받는 레포지토리 변경
+    private final CartRepository repository;
 
     @GetMapping
     public List<Cart> getList(@RequestParam LocalDate date) {
-        return repository.findAllByShoppingDate(date);
+        // ★ 날짜 혹은 즐겨찾기 항목을 불러오도록 변경
+        return repository.findAllByShoppingDateOrIsFavoriteTrue(date);
     }
 
     @PostMapping
@@ -24,11 +25,20 @@ public class CartController {
         return repository.save(item);
     }
 
+    @GetMapping("/search")
+    public List<Cart> searchItems(@RequestParam String text) {
+        // DB에서 해당 텍스트를 포함하는 모든 항목 조회
+        return repository.findByTextContaining(text);
+    }
+
     @PutMapping("/{id}")
     public Cart update(@PathVariable Long id, @RequestBody Cart item) {
-        // 기존 데이터를 먼저 찾아서 필요한 부분(isBought)만 수정하는 게 안전해
         return repository.findById(id).map(existingItem -> {
             existingItem.setIsBought(item.getIsBought());
+            // ★ 즐겨찾기 상태와 쇼핑 날짜(삭제 시 null 처리 등) 반영을 위해 추가
+            existingItem.setIsFavorite(item.getIsFavorite());
+            existingItem.setShoppingDate(item.getShoppingDate());
+            existingItem.setText(item.getText());
             return repository.save(existingItem);
         }).orElseThrow();
     }

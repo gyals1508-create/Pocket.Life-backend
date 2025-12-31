@@ -15,7 +15,7 @@ public class MealController {
     private final MealRepository mealRepository;
 
     @GetMapping
-    // 리액트에서 ?date=2025-12-30 이렇게 보내면 그걸 받아서 조회함
+    // 리액트에서 보낸 날짜 파라미터로 조회
     public List<Meal> getList(@RequestParam LocalDate date) {
         return mealRepository.findAllByMealDate(date);
     }
@@ -30,11 +30,9 @@ public class MealController {
         Meal meal = mealRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 기록을 찾을 수 없습니다."));
 
-        meal.setText(mealDetails.getText()); // 새로운 내용으로 교체
-        // 만약 식단 타입(아침/점심 등)도 수정 가능하게 하려면 아래 줄 추가
-        // meal.setMealType(mealDetails.getMealType());
-
-        return mealRepository.save(meal); // DB에 반영
+        meal.setText(mealDetails.getText());
+        meal.setCalories(mealDetails.getCalories()); // 칼로리 수정 반영 유지
+        return mealRepository.save(meal);
     }
 
     @DeleteMapping("/{id}")
