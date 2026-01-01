@@ -23,7 +23,10 @@ public class Cart {
     @Column(name = "shopping_date")
     private LocalDate shoppingDate;
 
-    // ★ 즐겨찾기 상태 저장을 위한 필드 추가
     @Column(name = "is_favorite", nullable = false)
     private Boolean isFavorite = false;
+
+    // 누락되었던 수량 필드 추가
+    @Column(name = "item_count")
+    private Integer count = 1;
 }
