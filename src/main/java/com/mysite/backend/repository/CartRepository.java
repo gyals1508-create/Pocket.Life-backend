@@ -11,13 +11,16 @@ import java.util.List;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    // 1. 특정 날짜의 목록을 가져오는 기본 메서드
     List<Cart> findAllByShoppingDate(LocalDate shoppingDate);
 
-    // 2. 검색 기능: 텍스트가 포함된 모든 구매 이력을 조회 (30일 딸기 찾기용)
     List<Cart> findByTextContaining(String text);
 
-    // 3. 즐겨찾기 유지 기능: 특정 날짜 항목이거나, 즐겨찾기(isFavorite)가 true인 항목 전체 조회
+    // 수정: 특정 이름을 가진 항목 중 하나라도 즐겨찾기(true)인 것이 있는지 확인용
+    boolean existsByTextAndIsFavoriteTrue(String text);
+
+    // 수정: 특정 이름을 가진 모든 항목의 즐겨찾기 상태를 한꺼번에 변경하기 위함
+    List<Cart> findAllByText(String text);
+
     @Query("SELECT c FROM Cart c WHERE c.shoppingDate = :shoppingDate OR c.isFavorite = true")
     List<Cart> findAllByShoppingDateOrIsFavoriteTrue(@Param("shoppingDate") LocalDate shoppingDate);
 }
